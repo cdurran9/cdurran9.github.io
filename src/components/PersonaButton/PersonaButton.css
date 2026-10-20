@@ -6,6 +6,20 @@
   /* Smooth with a slight overshoot at the end of the segment. */
   --wobble: cubic-bezier(0.45, -0.35, 0.55, 1.35);
 
+  /* Backdrop layout. Defaults here; backdropVars() sets a per-label variant. */
+  --bk-inset: 0.55em 1.5em -0.2em -0.45em;
+  --bk-skew: 0deg;
+  --bk-dur: 2.3s;
+  --bk-delay: -0.4s;
+  --rd-inset: -0.2em -0.55em 0.75em 38%;
+  --rd-skew: 0deg;
+  --rd-dur: 1.7s;
+  --rd-delay: -1.1s;
+  --cy-inset: 52% -0.95em -0.4em 48%;
+  --cy-skew: 0deg;
+  --cy-dur: 2.9s;
+  --cy-delay: -1.9s;
+
   position: relative;
   isolation: isolate;
   display: inline-block;
@@ -46,15 +60,17 @@
 
 /* Big black shard: top edge slices through the letters, right side falls short. */
 .p-btn::after {
-  inset: 0.55em 1.5em -0.2em -0.45em;
+  inset: var(--bk-inset);
+  transform: skewX(var(--bk-skew));
   z-index: -2;
   background: #000;
   clip-path: polygon(0 8%, 100% 0, 92% 100%, 5% 90%);
 }
 
-/* Red shard: hangs off the top right, stops around mid-height. */
+/* Red shard: hangs off the top (usually right), stops around mid-height. */
 .p-btn::before {
-  inset: -0.2em -0.55em 0.75em 38%;
+  inset: var(--rd-inset);
+  transform: skewX(var(--rd-skew));
   z-index: -1;
   background: var(--p-red);
   clip-path: polygon(4% 30%, 100% 0, 88% 78%, 0 100%);
@@ -67,7 +83,8 @@
  * `isolation: isolate` keeps the blend off the page background.
  */
 .p-btn .p-label::after {
-  inset: 52% -0.95em -0.4em 48%;
+  inset: var(--cy-inset);
+  transform: skewX(var(--cy-skew));
   z-index: 1;
   background: var(--p-cyan);
   mix-blend-mode: difference;
@@ -85,17 +102,17 @@
 .p-btn:is(:hover, :focus-visible)::after {
   animation:
     p-pop 340ms ease-out backwards,
-    p-corners-black 2.3s linear -0.4s infinite;
+    p-corners-black var(--bk-dur) linear var(--bk-delay) infinite;
 }
 .p-btn:is(:hover, :focus-visible)::before {
   animation:
     p-pop 340ms ease-out 40ms backwards,
-    p-corners-red 1.7s linear -1.1s infinite;
+    p-corners-red var(--rd-dur) linear var(--rd-delay) infinite;
 }
 .p-btn:is(:hover, :focus-visible) .p-label::after {
   animation:
     p-pop 340ms ease-out 80ms backwards,
-    p-corners-cyan 2.9s linear -1.9s infinite;
+    p-corners-cyan var(--cy-dur) linear var(--cy-delay) infinite;
 }
 
 /* The text gets a short jolt as the shapes land. */

@@ -1,6 +1,7 @@
 import { useRef, useState, type MouseEvent } from 'react';
 import { PersonaButton } from '../PersonaButton/PersonaButton';
 import { PersonaLabel } from '../PersonaButton/PersonaLabel';
+import { backdropVars } from '../PersonaButton/personaSeed';
 import './MenuDialog.css';
 
 const ITEMS = [
@@ -21,10 +22,11 @@ export function MenuDialog() {
 
   const close = () => dialog.current?.close();
 
-  // The dialog box fills the screen, so a click that lands on the dialog
-  // itself (not the nav or its buttons) is a click on the shim.
+  // The dialog box fills the screen, so any click that misses a menu button
+  // (including the nav's padding and the space beside shorter items) counts
+  // as a click on the shim.
   const onDialogClick = (event: MouseEvent<HTMLDialogElement>) => {
-    if (event.target === event.currentTarget) close();
+    if (!(event.target as Element).closest('.p-btn')) close();
   };
 
   return (
@@ -32,6 +34,7 @@ export function MenuDialog() {
       <button
         type="button"
         className="p-btn p-btn--small menu-toggle"
+        style={backdropVars('Menu')}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => {

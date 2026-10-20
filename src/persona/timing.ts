@@ -1,7 +1,7 @@
-// Cover → swap → reveal (~1.85s total).
+// Cover → swap → reveal (~1.55s total).
 export const TIMING = {
   cover: 700,
-  hold: 450,
+  hold: 150,
   reveal: 700,
 } as const;
 

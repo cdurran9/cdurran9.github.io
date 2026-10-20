@@ -3,6 +3,7 @@ import { useHref } from 'react-router';
 import { usePersonaNavigate } from '../../persona/TransitionContext';
 import { preloadScene } from '../../scenes';
 import { PersonaLabel } from './PersonaLabel';
+import { backdropVars } from './personaSeed';
 import './PersonaButton.css';
 
 type PersonaButtonProps = {
@@ -34,6 +35,7 @@ export function PersonaButton({ to, children, onSelect }: PersonaButtonProps) {
     <a
       className="p-btn"
       href={href}
+      style={backdropVars(children)}
       onClick={onClick}
       onPointerEnter={warm}
       onFocus={warm}
