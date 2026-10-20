@@ -1,26 +1,11 @@
-import { NavigationMenu } from 'radix-ui';
-import { Link } from 'react-router';
+import { Theme } from '@radix-ui/themes';
+import { MenuDialog } from '../../components/MenuDialog/MenuDialog';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
-      <NavigationMenu.Root>
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger>
-            <NavigationMenu.Link asChild>
-              <Link to="/">Home</Link>
-            </NavigationMenu.Link>
-          </NavigationMenu.Trigger>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger>
-            <NavigationMenu.Link asChild>
-              <Link to="/game">Game</Link>
-            </NavigationMenu.Link>
-          </NavigationMenu.Trigger>
-        </NavigationMenu.Item>
-      </NavigationMenu.Root>
+    <Theme accentColor="violet" grayColor="slate">
+      <MenuDialog />
       {children}
-    </>
+    </Theme>
   );
 };
