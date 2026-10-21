@@ -11,10 +11,20 @@ type PersonaButtonProps = {
   children: string;
   /** Called on a plain click, before navigating (e.g. to close a menu). */
   onSelect?: () => void;
+  /** Called when the button is hovered or focused. */
+  onHighlight?: () => void;
+  /** Extra context for screen readers, read after the label. */
+  description?: string;
 };
 
 /** Menu button: a real link (keeps href) that navigates through the wipe. */
-export function PersonaButton({ to, children, onSelect }: PersonaButtonProps) {
+export function PersonaButton({
+  to,
+  children,
+  onSelect,
+  onHighlight,
+  description,
+}: PersonaButtonProps) {
   const href = useHref(to);
   const personaNavigate = usePersonaNavigate();
 
@@ -29,7 +39,10 @@ export function PersonaButton({ to, children, onSelect }: PersonaButtonProps) {
   };
 
   // Warm the next scene's chunk while the user is still deciding.
-  const warm = () => void preloadScene(to);
+  const warm = () => {
+    onHighlight?.();
+    void preloadScene(to);
+  };
 
   return (
     <a
@@ -41,6 +54,7 @@ export function PersonaButton({ to, children, onSelect }: PersonaButtonProps) {
       onFocus={warm}
     >
       <PersonaLabel text={children} />
+      {description && <span className="p-label__sr">, {description}</span>}
     </a>
   );
 }
