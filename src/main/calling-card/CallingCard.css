@@ -152,17 +152,6 @@
   margin-top: 0.4rem;
 }
 
-.calling-card__email {
-  margin: 0;
-  padding: 0.15em 0.6em;
-  background: var(--c-ink);
-  color: var(--c-paper);
-  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-  user-select: all;
-}
 
 /*
  * ---- Dagger ----

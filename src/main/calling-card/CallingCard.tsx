@@ -30,10 +30,7 @@ export const CallingCard = () => {
             <li>{PROFILE.location} · makes games in Godot on the side</li>
           </ul>
 
-          <nav className="calling-card__links" aria-label="Contact and socials">
-            <PersonaLink href={`mailto:${PROFILE.email}`} className="p-btn--small">
-              Email
-            </PersonaLink>
+          <nav className="calling-card__links" aria-label="Socials">
             <PersonaLink href={PROFILE.linkedin} className="p-btn--small">
               LinkedIn
             </PersonaLink>
@@ -41,8 +38,6 @@ export const CallingCard = () => {
               GitHub
             </PersonaLink>
           </nav>
-
-          <p className="calling-card__email">{PROFILE.email}</p>
         </div>
 
         <img
