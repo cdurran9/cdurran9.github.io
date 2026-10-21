@@ -120,10 +120,10 @@
   list-style: none;
   background: var(--c-paper);
   color: var(--c-ink);
-  font-family: system-ui, 'Segoe UI', sans-serif;
+  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
   font-weight: 600;
-  font-size: clamp(0.9rem, 2.2vw, 1rem);
-  line-height: 1.35;
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  line-height: 1.25;
   clip-path: polygon(0 2%, 98% 0, 100% 96%, 2% 100%);
   rotate: -1deg;
 }
@@ -157,9 +157,10 @@
   padding: 0.15em 0.6em;
   background: var(--c-ink);
   color: var(--c-paper);
-  font-family: system-ui, 'Segoe UI', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
   user-select: all;
 }
 

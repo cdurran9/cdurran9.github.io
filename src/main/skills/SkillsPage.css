@@ -246,7 +246,7 @@
 }
 
 .stat-row__dot {
-  font-family: system-ui, sans-serif;
+  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
   font-size: 0.8em;
 }
 
