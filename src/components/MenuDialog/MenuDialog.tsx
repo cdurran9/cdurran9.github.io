@@ -14,10 +14,10 @@ const ITEMS = [
     description: 'Who I am & how to reach me',
   },
   {
-    to: '/stats',
-    label: 'Stats',
-    heading: 'About',
-    description: 'Coming soon',
+    to: '/request',
+    label: 'Request',
+    heading: 'FAQ',
+    description: 'Ask me a question',
   },
   {
     to: '/skills',
@@ -30,6 +30,12 @@ const ITEMS = [
     label: 'Inventory',
     heading: 'Projects',
     description: 'View my project portfolio',
+  },
+  {
+    to: '/help',
+    label: 'Help',
+    heading: 'Résumé',
+    description: 'My info, no frills',
   },
 ];
 

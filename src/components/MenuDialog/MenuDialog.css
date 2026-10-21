@@ -77,13 +77,20 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  max-width: calc(100% - 2rem);
+  /* Stay on the red side, clear of the menu items. */
+  max-width: 45vw;
   rotate: -5deg;
-  font: 400 clamp(2.6rem, 8vw, 5.5rem) / 1 Anton, Impact, 'Arial Narrow Bold', sans-serif;
+  font: 400 clamp(1.8rem, 4.5vw, 3.4rem) / 1 Anton, Impact, 'Arial Narrow Bold', sans-serif;
   text-transform: uppercase;
   color: #fff;
   pointer-events: none;
   animation: menu-help-in 220ms var(--menu-pop) 60ms backwards;
+}
+
+.menu-help .p-label__letters {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: 0.1em;
 }
 
 .menu-help__text {
@@ -187,7 +194,13 @@
   .menu-slash,
   .menu-help,
   .menu-help__heading,
-  .menu-help__text {
+  .menu-help .p-label__letters {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: 0.1em;
+}
+
+.menu-help__text {
     animation: none;
   }
 }

@@ -1,0 +1,500 @@
+.im-screen {
+  --im-red: #c8231c;
+  --im-blue: #2f55d4;
+  --im-ink: #000;
+  --im-paper: #fff;
+  --im-pop: cubic-bezier(0.2, 1.4, 0.4, 1);
+  --im-text: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  /* Lands just as the wipe starts peeling away. */
+  --im-enter: 300ms;
+
+  /* Exactly one screen tall: the phone scrolls inside, the page never does. */
+  display: grid;
+  justify-items: center;
+  height: 100svh;
+  padding: 5rem 1rem 1.5rem;
+  box-sizing: border-box;
+  overflow: clip;
+  text-align: left;
+}
+
+.im-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * ---- Phone ----
+ * Black outer edge, a white frame inside it, then the red screen, all cut to
+ * the same slightly skewed shape.
+ */
+.im-phone {
+  --shape: polygon(2% 0, 100% 2%, 98% 100%, 0 98.5%);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  /* Height comes from the screen; width follows it so the proportions hold. */
+  width: min(100%, 36rem, 66svh);
+  height: 100%;
+  min-height: 0;
+  padding: clamp(1.25rem, 3.5svh, 2.2rem) clamp(1.4rem, 4vw, 2.4rem) clamp(1.25rem, 3svh, 2rem);
+  box-sizing: border-box;
+  rotate: -2deg;
+  background: var(--im-ink);
+  clip-path: var(--shape);
+  animation: im-phone-in 420ms var(--im-pop) var(--im-enter) backwards;
+}
+
+.im-phone::before,
+.im-phone::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--shape);
+}
+
+.im-phone::before {
+  inset: 0.45rem;
+  background: var(--im-paper);
+}
+
+.im-phone::after {
+  inset: 1.05rem;
+  background: var(--im-red);
+}
+
+/* ---- Header: IM logo and the contact tile ---- */
+.im-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: none;
+  margin-bottom: clamp(0.75rem, 2.5svh, 1.75rem);
+}
+
+.im-logo {
+  padding: 0.05em 0.2em 0;
+  background: var(--im-paper);
+  box-shadow: 0 0 0 0.2rem var(--im-ink);
+  font: 400 clamp(2.2rem, 7vw, 3rem) / 1 Anton, Impact, sans-serif;
+  rotate: -7deg;
+}
+
+.im-logo__i {
+  color: var(--im-red);
+}
+
+.im-logo__m {
+  color: var(--im-ink);
+}
+
+.im-contact {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  aspect-ratio: 1;
+  background: var(--im-paper);
+  box-shadow: 0 0 0 0.2rem var(--im-ink);
+  rotate: 4deg;
+}
+
+/*
+ * ---- Avatar: placeholder blue quad ----
+ * Three layers, like the game's portraits: a black backing shifted down and
+ * left (thick on those sides, a hairline on the others, jutting out to a
+ * point at the bottom-left), a white frame, and the blue face inside it. The
+ * frame leans the same way, so it reads as a little window seen at an angle
+ * that the eventual portrait can lean out of.
+ */
+.im-avatar {
+  --shape: polygon(9% 10%, 100% 0, 94% 86%, 0 100%);
+  --back-bottom: 0.5rem;
+  --back-left: 0.6rem;
+  --frame: 0.2rem;
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  width: clamp(3.2rem, 9vw, 4.2rem);
+  aspect-ratio: 1.15;
+  /* Keep the protruding backing clear of whatever sits below and left. */
+  margin: 0 0 var(--back-bottom) var(--back-left);
+}
+
+.im-avatar::before,
+.im-avatar::after,
+.im-avatar__face {
+  content: '';
+  position: absolute;
+}
+
+/* Black backing: its far corner (0 100%) is the point that sticks out. */
+.im-avatar::before {
+  inset: -0.1rem -0.1rem calc(var(--back-bottom) * -1) calc(var(--back-left) * -1);
+  z-index: -1;
+  background: var(--im-ink);
+  clip-path: polygon(7% 6%, 100% 0, 97% 84%, 0 100%);
+}
+
+.im-avatar::after {
+  inset: 0;
+  background: var(--im-paper);
+  clip-path: var(--shape);
+}
+
+.im-avatar__face {
+  inset: var(--frame);
+  z-index: 1;
+  background: var(--im-blue);
+  clip-path: var(--shape);
+}
+
+/*
+ * Portrait: the same bottom and side edges as the face, but its top reaches
+ * 70% above the frame. The clip follows the frame below its top edge (so the
+ * shoulders stay inside) and opens out above it, letting the head lean out.
+ * Y stops: frame top-left at 47%, top-right at 41%, bottom-right at 92%.
+ */
+.im-avatar__portrait {
+  position: absolute;
+  inset: -70% var(--frame) var(--frame);
+  z-index: 2;
+  clip-path: polygon(
+    -40% 0,
+    140% 0,
+    140% 41%,
+    100% 41%,
+    94% 92%,
+    0 100%,
+    9% 47%,
+    -40% 47%
+  );
+}
+
+.im-avatar__portrait img {
+  position: absolute;
+  bottom: -4%;
+  left: 50%;
+  width: 135%;
+  max-width: none;
+  height: auto;
+  translate: -50% 0;
+}
+
+/* Head room, so the portrait doesn't cover the bubble above. */
+.im-msg--me .im-avatar {
+  margin-top: 1.4rem;
+}
+
+.im-avatar--small {
+  --back-bottom: 0.25rem;
+  --back-left: 0.3rem;
+  --frame: 0.12rem;
+  width: 2.1rem;
+}
+
+/* ---- Conversation ---- */
+.im-scroll {
+  /* Positioned so message offsets are measured from here when auto-scrolling. */
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  /* Room for the bubbles' pop-in overshoot and tails without clipping. */
+  padding: 0.5rem 0.25rem 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--im-ink) transparent;
+}
+
+.im-log {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.im-scroll:focus-visible {
+  outline: 0.2rem solid #35d3ff;
+  outline-offset: 0.2rem;
+}
+
+.im-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.im-msg--me {
+  padding-right: 2rem;
+  animation: im-in-left 260ms var(--im-pop) backwards;
+}
+
+.im-msg--you {
+  justify-content: flex-end;
+  padding-left: 3rem;
+  /* Leave room for the tail on the right. */
+  padding-right: 1.6rem;
+  animation: im-in-right 260ms var(--im-pop) backwards;
+}
+
+/* The intro bubbles wait for the phone to arrive. */
+.im-log > .im-msg:nth-child(1) {
+  animation-delay: calc(var(--im-enter) + 300ms);
+}
+.im-log > .im-msg:nth-child(2) {
+  animation-delay: calc(var(--im-enter) + 550ms);
+}
+
+.im-msg--me .im-bubble {
+  --edge: var(--im-paper);
+  --fill: var(--im-ink);
+  --shape: polygon(3% 0, 100% 0, 97% 100%, 0 100%);
+  color: var(--im-paper);
+  margin-left: 1.4rem;
+}
+
+.im-msg--you .im-bubble {
+  --edge: var(--im-ink);
+  --fill: var(--im-paper);
+  --shape: polygon(0 0, 97% 0, 100% 100%, 3% 100%);
+  color: var(--im-ink);
+}
+
+/* Bubble: edge colour outside, fill colour inset 3px, both slanted. */
+.im-bubble {
+  position: relative;
+  isolation: isolate;
+  max-width: 22rem;
+  padding: 0.75em 1.5em 0.8em 1.6em;
+}
+
+.im-bubble::before,
+.im-bubble::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--shape);
+}
+
+.im-bubble::before {
+  inset: 0;
+  background: var(--edge);
+}
+
+.im-bubble::after {
+  inset: 3px;
+  background: var(--fill);
+}
+
+.im-bubble__text a {
+  color: inherit;
+  text-decoration-color: #35d3ff;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.15em;
+}
+
+.im-bubble__text {
+  margin: 0;
+  font: 600 clamp(1.05rem, 2.6vw, 1.2rem) / 1.25 var(--im-text);
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Lightning tail: overlaps the bubble's edge a little, so its fill covers the
+ * bubble's border where they meet and the two read as one shape.
+ */
+.im-tail {
+  position: absolute;
+  top: 50%;
+  width: 2.1rem;
+  height: 1.6rem;
+  translate: 0 -50%;
+  overflow: visible;
+}
+
+.im-msg--me .im-tail {
+  left: -1.8rem;
+}
+
+.im-msg--you .im-tail {
+  right: -1.8rem;
+  scale: -1 1;
+}
+
+.im-tail polygon {
+  fill: var(--fill);
+}
+
+.im-tail polyline {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 3px;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Typing indicator: three dots bouncing in turn. */
+.im-typing {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.35rem 0.4rem;
+}
+
+.im-typing span {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+  rotate: 45deg;
+  animation: im-typing 900ms ease-in-out infinite;
+}
+
+.im-typing span:nth-child(2) {
+  animation-delay: 150ms;
+}
+.im-typing span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+/* ---- Reply choices ---- */
+.im-choices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: none;
+  gap: 0.7rem;
+  /* Sits at the bottom while the chat is short, then scrolls with it. */
+  margin-top: auto;
+  padding-top: clamp(1rem, 3svh, 2rem);
+}
+
+.im-choices__label {
+  margin: 0 0 0.2rem;
+  padding: 0.15em 0.6em;
+  background: var(--im-ink);
+  color: var(--im-paper);
+  font: italic 600 1rem / 1.2 var(--im-text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  rotate: -2deg;
+}
+
+
+.im-choice {
+  --edge: var(--im-ink);
+  --fill: var(--im-paper);
+  --shape: polygon(0 0, 97% 0, 100% 100%, 3% 100%);
+  position: relative;
+  isolation: isolate;
+  padding: 0.6em 1.5em 0.65em 1.6em;
+  border: 0;
+  background: none;
+  color: var(--im-ink);
+  font: 600 clamp(1.05rem, 2.6vw, 1.2rem) / 1.2 var(--im-text);
+  cursor: pointer;
+  transition:
+    translate 160ms var(--im-pop),
+    color 100ms;
+}
+
+.im-choice::before,
+.im-choice::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--shape);
+  transition: background 100ms;
+}
+
+.im-choice::before {
+  inset: 0;
+  background: var(--edge);
+}
+
+.im-choice::after {
+  inset: 3px;
+  background: var(--fill);
+}
+
+.im-choice:is(:hover, :focus-visible):not(:disabled) {
+  --fill: var(--im-ink);
+  color: var(--im-paper);
+  translate: -0.5rem 0;
+}
+
+.im-choice:focus-visible {
+  outline: 0.2rem solid #35d3ff;
+  outline-offset: 0.2rem;
+}
+
+.im-choice:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* ---- Animations ---- */
+@keyframes im-phone-in {
+  from {
+    translate: 0 30%;
+    rotate: 6deg;
+    opacity: 0;
+  }
+}
+
+@keyframes im-in-left {
+  from {
+    translate: -2rem 0;
+    scale: 0.8;
+    opacity: 0;
+  }
+}
+
+@keyframes im-in-right {
+  from {
+    translate: 2rem 0;
+    scale: 0.8;
+    opacity: 0;
+  }
+}
+
+@keyframes im-typing {
+  0%,
+  60%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: 0 -0.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .im-msg--me {
+    padding-right: 0.5rem;
+  }
+
+  .im-msg--you {
+    padding-left: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .im-phone,
+  .im-msg--me,
+  .im-msg--you,
+  .im-typing span {
+    animation: none;
+  }
+
+  .im-choice {
+    transition: none;
+  }
+}
