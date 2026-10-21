@@ -36,6 +36,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.p-btn--small {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
 /*
  * Backdrops: four-cornered shapes, deliberately off-register with the text so
  * edges cut through letters. Entering pops them in once, overshooting past

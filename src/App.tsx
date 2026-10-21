@@ -1,8 +1,10 @@
 import './App.css';
 import { Suspense } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes } from 'react-router';
 import { Layout } from './main/layout/Layout';
 import { ComingSoon } from './main/ComingSoon';
+import { CallingCard } from './main/calling-card/CallingCard';
+import { SkillsPage } from './main/skills/SkillsPage';
 import { TransitionProvider } from './persona/TransitionProvider';
 import { useTransitionState } from './persona/TransitionContext';
 import { Wipe } from './persona/Wipe';
@@ -13,8 +15,9 @@ function SceneRoutes() {
   return (
     <Suspense fallback={null}>
       <Routes location={displayLocation}>
+        <Route path="/" element={<CallingCard />} />
         <Route path="/stats" element={<ComingSoon title="Stats" />} />
-        <Route path="/skills" element={<ComingSoon title="Skills" />} />
+        <Route path="/skills" element={<SkillsPage />} />
         <Route path="/inventory" element={<ComingSoon title="Inventory" />} />
       </Routes>
     </Suspense>
@@ -24,21 +27,12 @@ function SceneRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      {/* Redirect outside the provider so landing on / doesn't play a wipe. */}
-      <Routes>
-        <Route path="/" element={<Navigate to="/stats" replace />} />
-        <Route
-          path="*"
-          element={
-            <TransitionProvider>
-              <Layout>
-                <SceneRoutes />
-              </Layout>
-              <Wipe />
-            </TransitionProvider>
-          }
-        />
-      </Routes>
+      <TransitionProvider>
+        <Layout>
+          <SceneRoutes />
+        </Layout>
+        <Wipe />
+      </TransitionProvider>
     </BrowserRouter>
   );
 }

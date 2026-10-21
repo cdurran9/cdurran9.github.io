@@ -5,10 +5,6 @@
   z-index: 10;
 }
 
-.p-btn--small {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-}
-
 /* Borderless, full-screen and transparent; the only visible chrome is the shim. */
 .menu-dialog {
   width: 100%;
@@ -44,6 +40,9 @@
 }
 .menu-dialog[open] .p-btn:nth-child(3) {
   animation-delay: 140ms;
+}
+.menu-dialog[open] .p-btn:nth-child(4) {
+  animation-delay: 210ms;
 }
 
 @keyframes menu-shim-in {

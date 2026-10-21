@@ -1,0 +1,334 @@
+.stats-screen {
+  --s-red: #d3141c;
+  --s-cyan: #5ee6d8;
+  --s-pink: #e05bd8;
+  --s-ink: #000;
+  --s-paper: #fff;
+  /* Lands just as the wipe starts peeling away. */
+  --s-enter: 300ms;
+  --s-ease: cubic-bezier(0.2, 1.4, 0.4, 1);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  width: min(100%, 44rem);
+  padding: 5.5rem 1.25rem 4rem;
+  box-sizing: border-box;
+  text-align: left;
+  font-family: Anton, Impact, 'Arial Narrow Bold', sans-serif;
+  color: var(--s-paper);
+  text-transform: none;
+}
+
+/* Every block slides in from the left, one after another. */
+.stats-screen > * {
+  animation: stats-slide-in 420ms var(--s-ease) backwards;
+  animation-delay: calc(var(--s-enter) + var(--d, 0) * 70ms);
+}
+.stats-screen > :nth-child(2) { --d: 1; }
+.stats-screen > :nth-child(3) { --d: 2; }
+.stats-screen > :nth-child(4) { --d: 3; }
+.stats-screen > :nth-child(5) { --d: 4; }
+.stats-screen > :nth-child(6) { --d: 5; }
+.stats-screen > :nth-child(7) { --d: 6; }
+
+@keyframes stats-slide-in {
+  from {
+    translate: -60% 0;
+    opacity: 0;
+  }
+}
+
+/*
+ * ---- Outlined panels ----
+ * Every box is an outer shape in the edge colour with the same shape inset
+ * inside it in the fill colour, so the outline follows the jagged edges.
+ */
+.stats-panel {
+  position: relative;
+  isolation: isolate;
+}
+
+.stats-panel::before,
+.stats-panel::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--shape);
+}
+
+.stats-panel::before {
+  inset: 0;
+  background: var(--edge);
+}
+
+.stats-panel::after {
+  inset: var(--edge-w, 0.4rem);
+  background: var(--fill);
+}
+
+.stats-panel--paper {
+  --edge: var(--s-ink);
+  --fill: var(--s-paper);
+  color: var(--s-ink);
+}
+
+.stats-panel--ink {
+  --edge: var(--s-paper);
+  --fill: var(--s-ink);
+  color: var(--s-paper);
+}
+
+/* ---- Name banner: white slab, tilted up ---- */
+.stats-id {
+  margin: 0;
+  padding: 0.7em 3.7em 0.8em 1.8em;
+  rotate: -3deg;
+  --shape: polygon(0 18%, 100% 0, 97% 100%, 3% 88%);
+  font-family: inherit;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* ---- Level slab: level readout with the job title underneath ---- */
+.stats-level {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: -0.5rem 0 0 2.5rem;
+  padding: 0.55em 2.4em 0.65em 1.6em;
+  rotate: -4deg;
+  --shape: polygon(2% 10%, 100% 0, 96% 92%, 0 100%);
+  font-size: clamp(1rem, 3vw, 1.3rem);
+}
+
+.stats-level__row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+
+.stats-level__lv,
+.stats-level__next,
+.stats-level__unit {
+  font-size: 0.8em;
+  transform: skewX(-12deg);
+}
+
+.stats-level__next {
+  margin-left: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+}
+
+.stats-level__value {
+  font-size: 2.6em;
+  line-height: 0.9;
+  transform: skewX(-12deg);
+}
+
+.stats-level__title {
+  margin-top: 0.15em;
+  font-size: 1.15em;
+  letter-spacing: -0.03em;
+}
+
+.stats-level .stat-num {
+  font-size: 1.6em;
+}
+
+/* ---- FE / BE readouts on a black bar ---- */
+.stats-gauges {
+  display: flex;
+  gap: 1.4em;
+  margin: -0.2rem 0 0.6rem 6rem;
+  padding: 0.55em 1.8em 0.65em 2.6em;
+  --shape: polygon(4% 0, 100% 6%, 98% 100%, 0 92%);
+  rotate: -2deg;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+}
+
+.stats-gauge {
+  font-size: 1.6em;
+  line-height: 1;
+  transform: skewX(-12deg);
+  border-bottom: 0.12em solid currentColor;
+}
+
+.stats-gauge--fe {
+  color: var(--s-cyan);
+}
+.stats-gauge--be {
+  color: var(--s-pink);
+}
+
+.stats-gauge__key {
+  font-size: 0.5em;
+  margin-inline: 0.15em;
+}
+
+/* ---- Stat boxes: black panels with a thick white outline ---- */
+.stat-box {
+  --edge-w: 0.5rem;
+  margin-left: var(--box-x, 0);
+  padding: var(--box-pad, 1.1em 2.4em 1.2em 2em);
+  rotate: var(--box-rot, 0deg);
+  font-size: var(--box-size, 1rem);
+}
+
+/* Biggest box for the primary stack, smaller ones step in and shrink. */
+.stat-box--frontend {
+  --box-size: clamp(1rem, 2.6vw, 1.25rem);
+  --box-x: 0.5rem;
+  --box-rot: -1.5deg;
+  --shape: polygon(0 3%, 97% 0, 100% 46%, 96% 100%, 4% 97%, 1% 60%);
+}
+
+.stat-box--backend {
+  --box-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  --box-x: 3rem;
+  --box-rot: 1deg;
+  --shape: polygon(3% 0, 100% 4%, 98% 100%, 0 95%, 2% 48%);
+}
+
+.stat-box--other {
+  --box-size: clamp(0.85rem, 2vw, 0.95rem);
+  --box-x: 1.5rem;
+  --box-rot: -2deg;
+  --box-pad: 2em 3em 2.2em 2.4em;
+  --shape: polygon(0 3%, 100% 0, 97% 100%, 2% 96%);
+}
+
+.stat-box__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: 0 0 0.4em;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 1.5em;
+  letter-spacing: -0.02em;
+  color: var(--s-paper);
+}
+
+.stat-box__tag {
+  padding: 0.1em 0.45em;
+  background: var(--s-red);
+  font-size: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  rotate: -4deg;
+}
+
+.stat-box__rows {
+  display: grid;
+  grid-template-columns: max-content auto max-content auto;
+  align-items: center;
+  column-gap: 0.6em;
+  row-gap: 0.2em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat-row {
+  display: contents;
+}
+
+.stat-row__name {
+  font-size: 1.15em;
+  letter-spacing: -0.03em;
+}
+
+.stat-row__dot {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8em;
+}
+
+.stat-row__lv {
+  transform: skewX(-12deg);
+}
+
+.stat-row__lv-key {
+  font-size: 0.65em;
+  margin-right: 0.15em;
+}
+
+.stat-num {
+  font-size: 1.3em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-num__pad {
+  opacity: 0.3;
+}
+
+/* ---- Level bar: 12 slanted pips ---- */
+.stat-bar {
+  display: inline-flex;
+  gap: 0.18em;
+}
+
+.stat-bar__pip {
+  width: 0.6em;
+  height: 0.9em;
+  transform: skewX(-20deg);
+  background: rgb(255 255 255 / 0.14);
+}
+
+.stat-bar__pip.is-filled {
+  background: var(--bar, var(--s-paper));
+  animation: stats-pip-in 260ms var(--s-ease) backwards;
+  animation-delay: calc(
+    var(--s-enter) + 250ms + var(--g, 0) * 120ms + var(--p) * 35ms
+  );
+}
+
+.stat-box--frontend {
+  --bar: var(--s-cyan);
+}
+.stat-box--backend {
+  --bar: var(--s-pink);
+}
+.stat-box--other {
+  --bar: var(--s-paper);
+}
+
+@keyframes stats-pip-in {
+  from {
+    scale: 1 0;
+    background: var(--s-paper);
+  }
+}
+
+/* Narrow screens: the bar drops under its name and level. */
+@media (max-width: 560px) {
+  .stat-box__rows {
+    grid-template-columns: max-content auto 1fr;
+  }
+
+  .stat-bar {
+    grid-column: 1 / -1;
+    margin-bottom: 0.35em;
+  }
+
+  .stats-gauges {
+    margin-left: 2rem;
+  }
+
+  .stat-box--backend {
+    --box-x: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-screen > *,
+  .stat-bar__pip.is-filled {
+    animation: none;
+  }
+}

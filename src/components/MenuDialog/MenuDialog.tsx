@@ -5,6 +5,7 @@ import { backdropVars } from '../PersonaButton/personaSeed';
 import './MenuDialog.css';
 
 const ITEMS = [
+  { to: '/', label: 'Calling Card' },
   { to: '/stats', label: 'Stats' },
   { to: '/skills', label: 'Skills' },
   { to: '/inventory', label: 'Inventory' },
