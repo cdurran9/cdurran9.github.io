@@ -5,6 +5,7 @@ import { Layout } from './main/layout/Layout';
 import { ComingSoon } from './main/ComingSoon';
 import { CallingCard } from './main/calling-card/CallingCard';
 import { SkillsPage } from './main/skills/SkillsPage';
+import { InventoryPage } from './main/inventory/InventoryPage';
 import { TransitionProvider } from './persona/TransitionProvider';
 import { useTransitionState } from './persona/TransitionContext';
 import { Wipe } from './persona/Wipe';
@@ -18,7 +19,7 @@ function SceneRoutes() {
         <Route path="/" element={<CallingCard />} />
         <Route path="/stats" element={<ComingSoon title="Stats" />} />
         <Route path="/skills" element={<SkillsPage />} />
-        <Route path="/inventory" element={<ComingSoon title="Inventory" />} />
+        <Route path="/inventory" element={<InventoryPage />} />
       </Routes>
     </Suspense>
   );

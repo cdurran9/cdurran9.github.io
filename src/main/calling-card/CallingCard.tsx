@@ -23,8 +23,8 @@ export const CallingCard = () => {
           <ul className="calling-card__details">
             <li>{YEARS} years shipping production web apps</li>
             <li>
-              Full-stack, frontend-leaning: React &amp; TypeScript up front, Java,
-              Spring Boot &amp; PostgreSQL behind it
+              Full-stack, with frontend expertise: React &amp; TypeScript, Java,
+              Spring Boot &amp; PostgreSQL
             </li>
             <li>Leads frontend standards, AI practices &amp; training</li>
             <li>{PROFILE.location} · makes games in Godot on the side</li>

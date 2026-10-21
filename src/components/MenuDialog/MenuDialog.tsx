@@ -13,12 +13,17 @@ const ITEMS = [
     heading: 'Contact',
     description: 'Who I am & how to reach me',
   },
-  { to: '/stats', label: 'Stats', heading: 'About', description: 'Coming soon' },
+  {
+    to: '/stats',
+    label: 'Stats',
+    heading: 'About',
+    description: 'Coming soon',
+  },
   {
     to: '/skills',
     label: 'Skills',
     heading: 'Tech Stack',
-    description: 'My tech stack, leveled up',
+    description: 'My tech stack skill levels',
   },
   {
     to: '/inventory',
@@ -59,7 +64,12 @@ export function MenuDialog() {
         aria-expanded={open}
         onClick={() => {
           // Start with the description for the page you're on.
-          setActive(Math.max(0, ITEMS.findIndex((item) => item.to === pathname)));
+          setActive(
+            Math.max(
+              0,
+              ITEMS.findIndex((item) => item.to === pathname),
+            ),
+          );
           dialog.current?.showModal();
           setOpen(true);
         }}

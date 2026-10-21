@@ -1,0 +1,75 @@
+/* Sized by its container: cqw units scale everything with the card's width. */
+.site-card {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 3;
+  overflow: hidden;
+  background:
+    /* A few ink spatters */
+    radial-gradient(circle at 8% 70%, #0b0b0b 0 0.9%, transparent 1.1%),
+    radial-gradient(circle at 11% 64%, #0b0b0b 0 0.5%, transparent 0.7%),
+    radial-gradient(circle at 93% 30%, #0b0b0b 0 0.7%, transparent 0.9%),
+    radial-gradient(circle at 88% 82%, #0b0b0b 0 1%, transparent 1.2%),
+    repeating-radial-gradient(
+      ellipse at 50% 45%,
+      #d3141c 0 8%,
+      #0b0b0b 8% 16%
+    );
+}
+
+/* Code brackets standing in for the emblem: black with a white edge, tilted. */
+.site-card__emblem {
+  translate: 0 -10%;
+  rotate: -14deg;
+  font: 400 30cqw / 1 Anton, Impact, sans-serif;
+  letter-spacing: -0.04em;
+  color: #0b0b0b;
+  -webkit-text-stroke: 0.6cqw #fff;
+  paint-order: stroke fill;
+  text-shadow: 1.2cqw 1.2cqw 0 #d3141c;
+}
+
+.site-card__text {
+  position: absolute;
+  bottom: 9%;
+  display: flex;
+  align-items: center;
+  gap: 0.03em;
+  font-size: 8cqw;
+  rotate: -2deg;
+}
+
+.site-card__gap {
+  width: 0.35em;
+}
+
+.site-card__l {
+  display: inline-block;
+  rotate: var(--r);
+  translate: 0 var(--y);
+  line-height: 1;
+}
+
+/* Black letters with a thick white outline. */
+.site-card__l--ink,
+.site-card__l--thin {
+  color: #0b0b0b;
+  -webkit-text-stroke: 0.14em #fff;
+  paint-order: stroke fill;
+  font-family: Anton, Impact, sans-serif;
+}
+
+.site-card__l--thin {
+  font: italic 600 1.15em / 1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+}
+
+/* Cut-out box letter. */
+.site-card__l--box {
+  padding: 0.04em 0.1em 0;
+  background: #fff;
+  color: #0b0b0b;
+  font-family: Anton, Impact, sans-serif;
+  box-shadow: 0 0 0 0.06em #0b0b0b;
+}
