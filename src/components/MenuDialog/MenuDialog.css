@@ -5,12 +5,12 @@
   z-index: 10;
 }
 
-.p-btn--small {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-}
-
 /* Borderless, full-screen and transparent; the only visible chrome is the shim. */
 .menu-dialog {
+  --menu-pop: cubic-bezier(0.2, 1.7, 0.4, 1);
+  /* Lean of the slash; the items' right edges follow it. */
+  --menu-slant: 18deg;
+
   width: 100%;
   height: 100%;
   max-width: none;
@@ -19,31 +19,98 @@
   padding: 0;
   border: 0;
   background: transparent;
-  overflow: visible;
+  overflow: hidden;
 }
 
+/* Black left of the slash (the red side covers the rest). */
 .menu-dialog::backdrop {
-  background: rgb(0 0 0 / 0.6);
+  background: rgb(8 2 3 / 0.95);
 }
 
 .menu-dialog[open]::backdrop {
-  animation: menu-shim-in 200ms ease-out;
+  animation: menu-shim-in 120ms ease-out;
+}
+
+/*
+ * ---- Slash rail ----
+ * A full-height row (items, then the red side) skewed into a "/". Each item
+ * is skewed back upright, so the items stay readable, but their right edges
+ * sit on the slanted line, right against the edge of the red.
+ */
+.menu-rail {
+  position: absolute;
+  inset-block: 0;
+  left: clamp(0.5rem, 10vw, 9rem);
+  display: flex;
+  align-items: center;
+  transform: skewX(calc(var(--menu-slant) * -1));
+}
+
+.menu-rail .p-btn {
+  transform: skewX(var(--menu-slant));
 }
 
 .menu-dialog__nav {
-  width: fit-content;
-  padding: 6rem 2rem 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
-/* Items pop in one after another each time the menu opens. */
+/* Everything right of the slash is red; far wider than the screen, then clipped. */
+.menu-slash {
+  flex: none;
+  align-self: stretch;
+  width: 200vw;
+  margin-left: 1.25rem;
+  background:
+    radial-gradient(circle, rgb(0 0 0 / 0.22) 1.6px, transparent 2.2px) 0 0 / 11px 11px,
+    #d3141c;
+  animation: menu-slash-in 160ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
+}
+
+/* ---- Description, lower right ---- */
+.menu-help {
+  position: absolute;
+  right: clamp(1rem, 5vw, 4rem);
+  bottom: clamp(1.5rem, 8vh, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: calc(100% - 2rem);
+  rotate: -5deg;
+  font: 400 clamp(2.6rem, 8vw, 5.5rem) / 1 Anton, Impact, 'Arial Narrow Bold', sans-serif;
+  text-transform: uppercase;
+  color: #fff;
+  pointer-events: none;
+  animation: menu-help-in 220ms var(--menu-pop) 60ms backwards;
+}
+
+.menu-help__text {
+  margin: 0.25em 0.4em 0 0;
+  padding: 0.25em 0.8em 0.3em;
+  background: #000;
+  border: 0.12em solid #fff;
+  color: #fff;
+  font: italic 600 clamp(1.05rem, 2.4vw, 1.35rem) / 1.15 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  rotate: 2deg;
+  /* Re-runs whenever the highlighted item changes (the element is re-keyed). */
+  animation: menu-help-text-in 220ms var(--menu-pop);
+}
+
+/*
+ * ---- Opening animations ----
+ * Every item slams in at once from oversized, overshoots small and settles,
+ * and the whole rail shakes on impact.
+ */
 .menu-dialog[open] .p-btn {
-  animation: menu-item-in 360ms var(--pop) backwards;
+  animation: menu-item-slam 230ms ease-out backwards;
 }
-.menu-dialog[open] .p-btn:nth-child(2) {
-  animation-delay: 70ms;
-}
-.menu-dialog[open] .p-btn:nth-child(3) {
-  animation-delay: 140ms;
+
+.menu-dialog[open] .menu-rail {
+  animation: menu-rail-shake 220ms linear 120ms;
 }
 
 @keyframes menu-shim-in {
@@ -52,17 +119,75 @@
   }
 }
 
-@keyframes menu-item-in {
-  from {
-    scale: 0.2;
-    translate: -40% 0;
+@keyframes menu-item-slam {
+  0% {
+    scale: 2.6;
     opacity: 0;
+  }
+  50% {
+    scale: 0.88;
+    opacity: 1;
+  }
+  75% {
+    scale: 1.06;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+/* Uses `translate`, so it doesn't fight the rail's skew `transform`. */
+@keyframes menu-rail-shake {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -0.5rem 0.35rem; }
+  45% { translate: 0.4rem -0.3rem; }
+  70% { translate: -0.2rem 0.15rem; }
+}
+
+@keyframes menu-slash-in {
+  from {
+    translate: 50vw 0;
+  }
+}
+
+@keyframes menu-help-in {
+  from {
+    translate: 60% 0;
+    opacity: 0;
+  }
+}
+
+.menu-help__heading {
+  display: inline-block;
+  animation: menu-help-text-in 220ms var(--menu-pop);
+}
+
+@keyframes menu-help-text-in {
+  from {
+    scale: 0.6;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .menu-dialog {
+    --menu-slant: 12deg;
+  }
+
+  /* Lift the items to leave room for the description below. */
+  .menu-dialog__nav {
+    margin-bottom: 25vh;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .menu-dialog[open]::backdrop,
-  .menu-dialog[open] .p-btn {
+  .menu-dialog[open] .p-btn,
+  .menu-dialog[open] .menu-rail,
+  .menu-slash,
+  .menu-help,
+  .menu-help__heading,
+  .menu-help__text {
     animation: none;
   }
 }

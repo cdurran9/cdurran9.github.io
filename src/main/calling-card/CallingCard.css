@@ -1,0 +1,219 @@
+.calling-page {
+  --c-red: #d3141c;
+  --c-ink: #0b0b0b;
+  --c-paper: #fff;
+  /* Lands just as the wipe starts peeling away. */
+  --c-enter: 300ms;
+
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 6rem 1.25rem 3rem;
+  box-sizing: border-box;
+  /* The dagger handle hangs past the card; don't let it cause sideways scroll. */
+  overflow-x: clip;
+  text-align: left;
+  font-family: Anton, Impact, 'Arial Narrow Bold', sans-serif;
+}
+
+/* Wrapper carries the tilt and the shadow (drop-shadow follows the clipped face). */
+.calling-card {
+  position: relative;
+  width: min(100%, 46rem);
+  rotate: -2.5deg;
+  filter: drop-shadow(0.6rem 0.8rem 0 rgb(0 0 0 / 0.45));
+  animation:
+    calling-card-in 450ms cubic-bezier(0.2, 1.3, 0.4, 1) var(--c-enter) backwards,
+    calling-card-thunk 260ms ease-out calc(var(--c-enter) + 620ms);
+}
+
+/*
+ * The card face: a white rough-cut edge with the rings inset inside it. The
+ * rings are centred on the pinned corner, so they radiate out from the dagger.
+ */
+.calling-card__face {
+  --shape: polygon(
+    1% 2%, 30% 0, 62% 1.5%, 100% 0, 98.6% 34%, 100% 68%, 99% 100%,
+    56% 98.4%, 21% 100%, 0 98.8%, 1.4% 61%, 0 27%
+  );
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  min-height: 28rem;
+  padding: clamp(1.75rem, 5vw, 3rem) clamp(1.5rem, 5vw, 3.25rem);
+  box-sizing: border-box;
+}
+
+.calling-card__face::before,
+.calling-card__face::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--shape);
+}
+
+.calling-card__face::before {
+  inset: 0;
+  background: var(--c-paper);
+}
+
+.calling-card__face::after {
+  inset: 0.6rem;
+  background:
+    radial-gradient(circle, rgb(0 0 0 / 0.22) 1.4px, transparent 2px) 0 0 / 10px 10px,
+    repeating-radial-gradient(
+      circle at 92% 6%,
+      var(--c-ink) 0 2.2rem,
+      var(--c-red) 2.2rem 4.4rem
+    );
+}
+
+/* Long names wrap at the space instead of overflowing the card. */
+.calling-card__name .p-label__letters {
+  flex-wrap: wrap;
+  row-gap: 0.1em;
+}
+
+/* ---- Text: on slabs so it reads over the rings ---- */
+.calling-card__kicker {
+  margin: 0;
+  padding: 0.2em 0.7em;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  rotate: -3deg;
+}
+
+.calling-card__name {
+  margin: 0.2rem 0 0;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  line-height: 1;
+  letter-spacing: 0;
+  color: #fff;
+  text-transform: uppercase;
+  rotate: -2deg;
+}
+
+.calling-card__title {
+  margin: 0;
+  padding: 0.25em 1.6em 0.3em 0.8em;
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  clip-path: polygon(0 0, 100% 10%, 96% 100%, 1% 90%);
+  rotate: 1.5deg;
+}
+
+.calling-card__details {
+  display: grid;
+  gap: 0.35em;
+  max-width: 30rem;
+  margin: 0.3rem 0 0;
+  padding: 0.9em 1.6em 1em 1.3em;
+  list-style: none;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  line-height: 1.25;
+  clip-path: polygon(0 2%, 98% 0, 100% 96%, 2% 100%);
+  rotate: -1deg;
+}
+
+.calling-card__details li {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+.calling-card__details li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 0.55em;
+  height: 0.55em;
+  background: var(--c-red);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.calling-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.4rem;
+  margin-top: 0.4rem;
+}
+
+
+/*
+ * ---- Dagger ----
+ * The blade tip is at the image's bottom-left and the handle at its top-right,
+ * so shifting it up and right puts the blade through the card's top-right
+ * corner with the handle sticking out past the edge.
+ */
+.calling-card__dagger {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: clamp(9rem, 26vw, 15rem);
+  height: auto;
+  translate: 38% -42%;
+  rotate: 4deg;
+  filter: drop-shadow(0.4rem 0.6rem 0 rgb(0 0 0 / 0.5));
+  pointer-events: none;
+  animation: calling-dagger-in 300ms cubic-bezier(0.5, 0, 0.9, 0.4)
+    calc(var(--c-enter) + 320ms) backwards;
+}
+
+/* Card slides in from the left, the dagger stabs in, the card jolts on impact. */
+@keyframes calling-card-in {
+  from {
+    translate: -40% 0;
+    rotate: -10deg;
+    opacity: 0;
+  }
+}
+
+@keyframes calling-dagger-in {
+  from {
+    translate: 110% -130%;
+    scale: 1.4;
+    opacity: 0;
+  }
+}
+
+@keyframes calling-card-thunk {
+  30% {
+    translate: -0.4rem 0.5rem;
+    rotate: -3.2deg;
+  }
+  65% {
+    translate: 0.15rem -0.2rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .calling-card__face {
+    min-height: 0;
+  }
+
+  .calling-card__dagger {
+    translate: 30% -45%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calling-card,
+  .calling-card__dagger {
+    animation: none;
+  }
+}
