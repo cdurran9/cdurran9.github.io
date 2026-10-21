@@ -15,6 +15,8 @@ type PersonaButtonProps = {
   onHighlight?: () => void;
   /** Extra context for screen readers, read after the label. */
   description?: string;
+  /** Marks the link as the page you're on. */
+  current?: boolean;
 };
 
 /** Menu button: a real link (keeps href) that navigates through the wipe. */
@@ -24,6 +26,7 @@ export function PersonaButton({
   onSelect,
   onHighlight,
   description,
+  current = false,
 }: PersonaButtonProps) {
   const href = useHref(to);
   const personaNavigate = usePersonaNavigate();
@@ -48,6 +51,7 @@ export function PersonaButton({
     <a
       className="p-btn"
       href={href}
+      aria-current={current ? 'page' : undefined}
       style={backdropVars(children)}
       onClick={onClick}
       onPointerEnter={warm}

@@ -312,6 +312,8 @@
   }
 
   .inv-detail {
+    /* Clears the fixed menu button when scrolled into view. */
+    scroll-margin-top: 5rem;
     padding-left: 0;
     padding-top: 1.25rem;
     border-left: 0;

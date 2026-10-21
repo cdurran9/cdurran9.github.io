@@ -1,4 +1,5 @@
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { prefersReducedMotion } from '../../persona/timing';
 import {
   INVENTORY,
   type InventoryItem,
@@ -67,6 +68,9 @@ function ItemDetails({ item }: { item: InventoryItem }) {
   );
 }
 
+// Matches the breakpoint in InventoryPage.css where details stack under the list.
+const STACKED = '(max-width: 760px)';
+
 export const InventoryPage = () => {
   const [tabId, setTabId] = useState<InventoryTab['id']>('professional');
   // Remember the open item per tab so switching tabs doesn't lose your place.
@@ -77,6 +81,18 @@ export const InventoryPage = () => {
 
   const tab = INVENTORY.find((t) => t.id === tabId) ?? INVENTORY[0];
   const item = tab.items.find((i) => i.id === selected[tab.id]) ?? tab.items[0];
+
+  const openItem = (id: string) => {
+    setSelected((s) => ({ ...s, [tab.id]: id }));
+    // When the details sit below the list, bring them into view so the tap
+    // visibly does something.
+    if (window.matchMedia(STACKED).matches) {
+      document.getElementById('inv-detail')?.scrollIntoView({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
   // Arrow keys move between the two tabs, per the ARIA tabs pattern.
   const onTabKey = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -130,7 +146,7 @@ export const InventoryPage = () => {
                   className="inv-row"
                   aria-current={i.id === item.id}
                   aria-controls="inv-detail"
-                  onClick={() => setSelected((s) => ({ ...s, [tab.id]: i.id }))}
+                  onClick={() => openItem(i.id)}
                 >
                   <span className="inv-row__name">{i.name}</span>
                   <span className="inv-row__tag">{i.tag}</span>

@@ -486,6 +486,29 @@
   }
 }
 
+/*
+ * Short screens (e.g. a phone on its side): sizing the phone to the screen
+ * would leave it a sliver, so the phone grows with the conversation and the
+ * page does the scrolling instead.
+ * Keep the query in sync with SHORT_SCREEN in RequestPage.tsx.
+ */
+@media (max-height: 36rem) {
+  .im-screen {
+    height: auto;
+    overflow: visible;
+  }
+
+  .im-phone {
+    width: min(100%, 36rem);
+    height: auto;
+  }
+
+  .im-scroll {
+    flex: none;
+    overflow: visible;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .im-phone,
   .im-msg--me,

@@ -7,6 +7,9 @@ import './RequestPage.css';
 type Message = Reply & { id: number; from: 'me' | 'you' };
 
 const TYPING_MS = 700;
+// Matches the short-screen query in RequestPage.css, where the page scrolls
+// instead of the phone.
+const SHORT_SCREEN = '(max-height: 36rem)';
 const BETWEEN_BUBBLES_MS = 450;
 
 let nextId = 0;
@@ -93,14 +96,17 @@ export const RequestPage = () => {
   const [typing, setTyping] = useState(false);
   const timers = useRef<number[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const choicesRef = useRef<HTMLDivElement>(null);
+  // Set when a picked question's button disappears and takes focus with it.
+  const refocus = useRef(false);
 
   useEffect(() => {
     const pending = timers.current;
     return () => pending.forEach(clearTimeout);
   }, []);
 
-  // Scroll the phone (never the page) so my latest message, or the typing
-  // bubble, sits at the bottom of the view. The reply choices below it stay a
+  // Scroll the phone (or, on short screens, the page) so my latest message,
+  // or the typing bubble, sits at the bottom of the view. The reply choices below it stay a
   // scroll away instead of pushing my answer off the top.
   // Only when I post: a visitor's message would aim at my previous bubble and
   // jump the view up before my reply pulls it back down.
@@ -110,15 +116,37 @@ export const RequestPage = () => {
     const mine = el?.querySelectorAll<HTMLElement>('.im-msg--me');
     const last = mine?.[mine.length - 1];
     if (!el || !last) return;
+    const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+    if (window.matchMedia(SHORT_SCREEN).matches) {
+      last.scrollIntoView({ block: 'end', behavior });
+      return;
+    }
     el.scrollTo({
       top: Math.max(0, last.offsetTop + last.offsetHeight - el.clientHeight + 24),
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      behavior,
     });
   }, [log, typing]);
+
+  // Once I've finished replying, hand focus to the next question (or, with
+  // none left, the conversation) so keyboard users aren't dropped at the top.
+  useEffect(() => {
+    if (typing || !refocus.current) return;
+    refocus.current = false;
+    // Leave it be if they've moved focus somewhere else in the meantime.
+    if (document.activeElement !== scrollRef.current) return;
+    const next =
+      choicesRef.current?.querySelector<HTMLElement>('.im-choice') ?? scrollRef.current;
+    next?.focus({ preventScroll: true });
+  }, [typing]);
 
   const ask = (id: string) => {
     const q = QUESTIONS.find((item) => item.id === id);
     if (!q || typing) return;
+    // Hold focus on the conversation while the clicked button goes away.
+    if (choicesRef.current?.contains(document.activeElement)) {
+      scrollRef.current?.focus({ preventScroll: true });
+      refocus.current = true;
+    }
     setAsked((a) => [...a, id]);
     setLog((l) => [...l, message('you', q.question)]);
 
@@ -166,7 +194,7 @@ export const RequestPage = () => {
             {typing && <Bubble typing />}
           </ol>
 
-          <div className="im-choices">
+          <div className="im-choices" ref={choicesRef}>
             {remaining.length > 0 && (
               <>
                 <p className="im-choices__label">Choose a reply</p>

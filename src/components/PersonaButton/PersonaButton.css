@@ -228,6 +228,13 @@
 .p-label__letters {
   display: inline-flex;
   align-items: center;
+  /* The space between words. */
+  column-gap: 0.38em;
+}
+
+.p-word {
+  display: inline-flex;
+  align-items: center;
   gap: 0.04em;
 }
 
@@ -238,10 +245,6 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-.p-letter-gap {
-  width: 0.3em;
 }
 
 .p-letter {

@@ -11,3 +11,15 @@ body {
     linear-gradient(#d3141c, #a30f16 55%, #7a0a10);
   background-attachment: fixed;
 }
+
+/* Same flex column the pages used to sit in directly under #root. */
+.layout-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* Headings get focus after a page change; that's not a control to outline. */
+.layout-main h1[tabindex='-1']:focus {
+  outline: none;
+}

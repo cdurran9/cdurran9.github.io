@@ -97,6 +97,7 @@ export function MenuDialog() {
                 key={item.to}
                 to={item.to}
                 description={item.description}
+                current={item.to === pathname}
                 onSelect={close}
                 onHighlight={() => setActive(i)}
               >

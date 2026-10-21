@@ -18,7 +18,11 @@ function Num({ value, digits = 2 }: { value: number; digits?: number }) {
   const pad = '0'.repeat(Math.max(0, digits - text.length));
   return (
     <span className="stat-num">
-      {pad && <span className="stat-num__pad">{pad}</span>}
+      {pad && (
+        <span className="stat-num__pad" aria-hidden="true">
+          {pad}
+        </span>
+      )}
       {text}
     </span>
   );
@@ -97,7 +101,8 @@ export const SkillsPage = () => {
                 <span className="stat-row__dot" aria-hidden="true">
                   •
                 </span>
-                <span className="stat-row__lv">
+                {/* The meter below already reads out the level. */}
+                <span className="stat-row__lv" aria-hidden="true">
                   <span className="stat-row__lv-key">LV</span>
                   <Num value={skill.level} />
                 </span>
